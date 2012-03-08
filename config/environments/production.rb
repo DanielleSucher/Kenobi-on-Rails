@@ -17,6 +17,9 @@ Kenobi::Application.configure do
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = false
 
+  # precompile stuff like blueprint.css plskthxbye
+  config.assets.precompile += %w( *.css *.js )
+
   # Generate digests for assets URLs
   config.assets.digest = true
 
