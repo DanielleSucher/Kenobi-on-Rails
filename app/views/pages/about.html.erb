@@ -1,0 +1,15 @@
+<p>
+	You read the footer, but what does it really mean? Well, in the 1700s 
+	<%= link_to "Reverend Thomas Bayes", "http://lesswrong.com/lw/774/a_history_of_bayes_theorem/" %> came up with this nifty little equation known as <%= link_to "Bayes Theorem", "http://yudkowsky.net/rational/bayes" %>, which is a way of figuring out just how persuasive each additional bit of evidence you come across really ought to be to you, under the circumstances.
+<p> 
+	Kenobi uses Bayes Theorem to analyze old data from your <%= link_to "Ask Metafilter", "http://ask.metafilter.com/" %> profile to learn what kinds of questions you tend to give well-received answers to. Once it has learned from your old answers, it can apply what it knows whenever you ask it to classify newly posted questions on <%= link_to "the green", "http://ask.metafilter.com/" %>. Kenobi looks at each new questions in turn, and collects only those which are similar enough (according to Bayes Theorem!) to the sorts of questions you've previously posted well-received (read: favorited at all) answers to before.
+</p>
+<p>
+	Aside from the classifier, Kenobi also has a pair of scrapers in its innards. I took a cool screen scraping class offered by <%= link_to "ScraperWiki", "https://scraperwiki.com" %>, so Kenobi was my project to solidify my understanding of how scraping works. Kenobi has two separate scrapers - one to scrape a user's profile for past answered questions and answer favorite counts, and one to scrape <%= link_to "the green", "http://ask.metafilter.com/" %> for newly posted questions. Two scrapers were needed because the two data sources are formatted differently, and because Kenobi has to log into Metafilter (using a tool called <%= link_to "Mechanize", "https://github.com/tenderlove/mechanize" %>) to gather the training data but can gather the new questions without bothering to log in.
+</p>
+<p>
+	You're welcome to take a look at my source code over on Github.
+</p>
+<p>
+	You can <%= link_to "email me", "mailto:dsucher@gmail.com" %> if you have any questions, concerns, or are just in the mood to here to me geek out about bees or something. 
+</p>

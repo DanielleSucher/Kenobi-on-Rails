@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kenobi</title>
+        <%= stylesheet_link_tag 'blueprint/screen', :media => 'screen' %>
+        <%= stylesheet_link_tag 'blueprint/print',  :media => 'print' %>
+        <%= stylesheet_link_tag    "application", :media => "all" %>
+        <script type="text/javascript" src="http://use.typekit.com/kps7wbb.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+        <%= javascript_include_tag "application" %>
+        <%= csrf_meta_tags %>
+    </head>
+    <body>
+        <div class="container">
+            <div class="banner">
+                <span id="title">Kenobi</span><br />
+                <span id="subtitle">your only hope for discovering where you can be most helpful</span>
+            </div>
+            <div class="main">
+                <%= yield %>
+            </div>
+            <div class="footer">
+                Kenobi is a naive Bayesian classifier and pair of <%= link_to "Ask Metafilter", "http://ask.metafilter.com/" %> scrapers written by <%= link_to "Danielle Sucher", "http://daniellesucher.com" %> • <%= link_to "Contact", "mailto:dsucher@gmail.com" %> • <%= link_to "About", about_path %>
+            </div>
+        </div>
+    </body>
+</html>

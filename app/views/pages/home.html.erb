@@ -1,0 +1,42 @@
+<% flash.each do |key, value| %>
+	<div class="flash_<%= key %>"><h3><%= value %></h3></div>
+<% end %>
+<br />
+<div class="classify_form">
+	<%= form_tag 'users/classify', :method => 'post' do %>
+		<h3>Have Kenobi identify the best new <%= link_to "Ask Metafilter", "http://ask.metafilter.com/" %> questions for you to answer:</h3>
+		<div class="field lower">
+			How many pages of new AskMe questions should Kenobi analyze for you?
+			<br />
+			<span class="form_select"><%= select_tag :pages, "<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>".html_safe %></span>
+		</div>
+		<div class="field lower">
+			What is your Metafilter user ID?
+			<br />
+			<span class="form_input"><%= text_field_tag :askme_id %></span>
+		</div>
+		<div class="actions">
+			<span class="form_submit"><%= submit_tag "Submit" %></span>
+		</div>
+	<% end %>
+</div>
+
+<div class="retrain_form">
+	<%= form_tag 'users/retrain', :method => 'post' do %>
+		<h3>Update Kenobi with your more recent history (use rarely!):</h3>
+		<p>If you've answered a lot of new questions since you first trained Kenobi on your data, you may want to re-train Kenobi now! The more data Kenobi has to work with, the more accurate its classification of new questions will be.</p>
+		<div class="field">
+			What is the Metafilter user ID for the user you're re-training Kenobi on?
+			<br />
+			<span class="form_input"><%= text_field_tag :askme_id %></span>
+		</div>
+		<div class="actions">
+			<span class="form_submit"><%= submit_tag "Submit" %></span>
+		</div>
+	<% end %>
+</div>
+
+<div class="note">
+	<p>Note:  The first time you ask Kenobi to analyze questions for a user it's never been trained on before, you may be waiting a while. Please be patient, and don't close the tab until you see a flash at the top of the page indicating that it's done! </p>
+	<p>After that initial set-up, you can use Kenobi to classify new Ask Metafilter questions for you whenever you want, without having to re-train Kenobi each time. Phew!</p>
+</div>

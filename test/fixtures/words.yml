@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  wordstem: MyString
+  should: 1
+  should_not: 1
+  user_id: 1
+
+two:
+  wordstem: MyString
+  should: 1
+  should_not: 1
+  user_id: 1
