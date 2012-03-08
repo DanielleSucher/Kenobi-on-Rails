@@ -9,12 +9,22 @@ a {
     border-bottom:1px dotted;
 }
 
+a:hover {
+    color: #6D6002;
+    text-decoration: none;
+    border-bottom:1px dotted;
+}
+
 .banner {
     color: #6D6002;
     font-family: "ltc-globe-gothic",sans-serif;
 /*    font-family: "ltc-squareface",sans-serif;
     font-family: "chennai-slab",serif;
     font-family: "josefin",sans-serif;*/
+}
+
+.banner a {
+    border-bottom: none;
 }
 
 #title {
@@ -95,6 +105,7 @@ a {
 
 .footer {
     padding-top: 30px;
+    margin-bottom: 30px;
     clear: both;
     text-align: center;
     font-size: 11px;
