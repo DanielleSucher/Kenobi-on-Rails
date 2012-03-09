@@ -11,7 +11,7 @@
 			<span class="form_select"><%= select_tag :pages, "<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>".html_safe %></span>
 		</div>
 		<div class="field lower">
-			What is your Metafilter user ID?
+			What is your MetaFilter user ID (your number, not your name!)?
 			<br />
 			<span class="form_input"><%= text_field_tag :askme_id %></span>
 		</div>
@@ -26,7 +26,7 @@
 		<h3>Update Kenobi with your more recent history (use rarely!):</h3>
 		<p>If you've answered a lot of new questions since you first trained Kenobi on your data, you may want to re-train Kenobi now! The more data Kenobi has to work with, the more accurate its classification of new questions will be.</p>
 		<div class="field">
-			What is the Metafilter user ID for the user you're re-training Kenobi on?
+			What is the MetaFilter user ID (the number, not the name!) for the user you're re-training Kenobi on?
 			<br />
 			<span class="form_input"><%= text_field_tag :askme_id %></span>
 		</div>
@@ -38,5 +38,5 @@
 
 <div class="note">
 	<p>Note:  The first time you ask Kenobi to analyze questions for a user it's never been trained on before, you may be waiting a while. Please be patient, and don't close the tab until you see a flash at the top of the page indicating that it's done! </p>
-	<p>After that initial set-up, you can use Kenobi to classify new Ask Metafilter questions for you whenever you want, without having to re-train Kenobi each time. Phew!</p>
+	<p>After that initial set-up, you can use Kenobi to classify new Ask MetaFilter questions for you whenever you want, without having to re-train Kenobi each time. Phew!</p>
 </div>
