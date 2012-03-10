@@ -41,15 +41,16 @@ a:hover {
     font-family: "ltc-bodoni-175",serif;
 }
 
-.classify_form {
+.classify_form,
+.note {
     clear: both;
-    float: left;
-    width: 300px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 630px;
 }
 
-.retrain_form {
-    float: right;
-    width: 300px;
+.note {
+    padding-top: 40px;
 }
 
 .form_input {
@@ -65,7 +66,13 @@ a:hover {
 }
 
 .lower {
-    margin-top: 38px;
+    margin-top: 20px;
+}
+
+.lower,
+.actions {
+    text-align: right;
+    padding-right: 70px;
 }
 
 .flash_success,
@@ -96,11 +103,6 @@ a:hover {
 .results li {
     font-size: 18px;
     margin-top: 10px;
-}
-
-.note {
-    clear: both;
-    padding-top: 60px;
 }
 
 .footer {
