@@ -1,6 +1,10 @@
+require 'askmeanswerscraper'
+require 'askmequestionscraper'
+require 'naivebayes'
+
 class User < ActiveRecord::Base
 	attr_accessible :askme_id, :total_words, :total_docs, :should_words, :should_not_words, 
-					:should_docs, :should_not_docs
+					:should_docs, :should_not_docs, :train, :train_word, :training_status
 
 
     has_many :words, :dependent => :destroy
@@ -9,6 +13,7 @@ class User < ActiveRecord::Base
     validates_presence_of :askme_id
 
     def train
+        self.update_attribute(:training_status, "started")
     	# prep the classifier
     	categories = ["should","should_not"]
         classifier = NaiveBayes.new(categories,self)
@@ -30,6 +35,9 @@ class User < ActiveRecord::Base
         scraper.should_not_answer_training.each do |question|
             classifier.train("should_not", question)
         end
+        self.save
+        self.reload
+        self.update_attribute(:training_status, "done")
     end
 
     def train_word(category,word,count)

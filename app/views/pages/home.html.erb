@@ -1,5 +1,5 @@
 <% flash.each do |key, value| %>
-	<div class="flash_<%= key %>"><h3><%= value %></h3></div>
+	<div class="flash_<%= key %>"><h3><%= value %></h3><div id="spinner"></div></div>
 <% end %>
 <br />
 <div class="classify_form">
@@ -8,7 +8,7 @@
 		<div class="field lower">
 			How many pages of new AskMe questions should Kenobi analyze for you?
 			<br />
-			<span class="form_select"><%= select_tag :pages, "<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>".html_safe %></span>
+			<span class="form_select"><%= select_tag :pages, "<option>1</option><option>2</option><option>3</option>".html_safe %></span>
 		</div>
 		<div class="field lower">
 			What is your MetaFilter user ID <strong>number</strong>?
@@ -22,6 +22,6 @@
 </div>
 
 <div class="note">
-	<p>Note:  If you've never used Kenobi before, you may be waiting a while. Please be patient, and don't close the tab until you see a flash at the top of the page indicating that it's done! </p>
+	<p>Note:  If you've never used Kenobi before, you may be waiting a while. Sorry about that! Hang out and watch the spinny doodad, and you'll be redirected to your results you just as soon as Kenobi has had the chance to figure you out.</p>
 	<p>After that initial set-up, you can use Kenobi to classify new <%= link_to "AskMeFi", "http://ask.metafilter.com/" %> questions for you whenever you want, and it'll be much faster. Kenobi only goes through that long learning process the first time, or if it's been more than 6 months since the last time it updated its records on you. Phew!</p>
 </div>

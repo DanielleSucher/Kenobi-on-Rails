@@ -24,6 +24,7 @@ gem 'stemmer'
 gem 'nokogiri'
 gem 'mechanize'
 
+gem 'delayed_job_active_record'
 gem 'dalli', '~> 1.1'
 
 group :production do
