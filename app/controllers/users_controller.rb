@@ -30,7 +30,7 @@ class UsersController < ApplicationController
             end
         else
             # train Kenobi when classifying new or out-of-date users
-            @user.delay.train
+            @user.delay.train unless @user.training_status == "started"
             flash[:training] = "Please be patient - Kenobi is busy analyzing your AskMeFi data to figure out 
                                     what kinds of questions you're best at answering!"
             redirect_to root_path
