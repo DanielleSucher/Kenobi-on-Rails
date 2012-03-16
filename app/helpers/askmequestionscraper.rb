@@ -12,7 +12,7 @@ class AskMeQuestionScraper
     end
 
     def parse_askme_questions(url)
-        # Parse an ASkMe new questions page
+        # Parse an AskMe new questions page
  		html = Nokogiri::HTML(open(url))
 
         # collect the divs of each question
@@ -32,7 +32,6 @@ class AskMeQuestionScraper
     def scrape_next_page(url)
         # adds url for the next page of older questions
         html = Nokogiri::HTML(open(url))
-	        # Except that's the wrong css identifier still, need to change it
         next_link = html.search('p#navigation > a')
         next_link = next_link[0]['href']
         @next_page = @url + next_link
@@ -40,8 +39,6 @@ class AskMeQuestionScraper
 
     def scrape(pages)
         # Parse the first page of questions
-        # puts "How many pages back do you want to analyze, after the front page?"
-        # count = $stdin.gets.chomp.to_i
         self.parse_askme_questions(@url)
         # Parse the remaining pages of answers
         @next_page = @url

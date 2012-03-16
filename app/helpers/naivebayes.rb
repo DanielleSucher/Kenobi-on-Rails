@@ -13,12 +13,6 @@ class NaiveBayes
     # Train the classifier!
     def train(category,document)
         word_count(document).each do |word,count|
-            # if Word.where(:user_id => @user.id, :wordstem => word).first
-            #     old_word = Word.where(:user_id => @user.id, :wordstem => word).first
-            #     old_word[category.to_sym] = count
-            # else
-            #     @user.words.build( :wordstem => word, category.to_sym => count )
-            # end
             @user.train_word(category,word,count)
         end
         cat = category+"_docs"
@@ -42,7 +36,7 @@ class NaiveBayes
         sorted = self.probabilities(document).sort_by { |a,b| b } # sorts into an array of arrays, asc by value
         best = sorted.pop
         second_best = sorted.pop
-        best[1]/second_best[1] > @threshold || second_best[1] == 0 ? best[0] : "Unknown"
+        second_best[1] == 0 || best[1]/second_best[1] > @threshold ? best[0] : "Unknown"
     end
 
     def relative_odds(document) #  a complete set of relative odds rather than a single absolute odd
@@ -69,13 +63,10 @@ class NaiveBayes
     end
 
     def word_probability(category,word)
-        # Basically the probability of a word in a category is the number of times it occurred 
+        # The probability of a word in a category is the number of times it occurred 
         # in that category, divided by the number of words in that category altogether. 
         # Except we pretend every occured at least once per category, to avoid errors when encountering
-        # words never encountered during training. (In latest draft, 0.1 instead of 1)
-        # First draft: (times the word occurs in this category + 1)/total number of words in this category
-        # Dave's draft: this_category = (@words[category][word].to_f + 1)/(@total_occurrences[word].to_f + 1)
-        # @words[category].has_key?(word) ? test_word = @words[category][word].to_f : test_word = 0.1
+        # words never encountered during training. (In latest draft, 0.0000000000000001 instead of 1)
         test_word = 0.0000000000000001
         test_word = @user.words.find(:first, :conditions => { :wordstem => word })[category.to_sym].to_f if
             @user.words.find(:first, :conditions => { :wordstem => word }) &&
@@ -104,9 +95,6 @@ class NaiveBayes
     def probability(category,document)
         return self.document_probability(category,document) * self.category_probability(category)
         # Pr(category|document) = (Pr(document|category) * Pr(category))/Pr(document)
-        # The probability of category given the document = 
-        # the probability of the document given the category * the probability of the category
-        # (Divided by the probability of the documents, which I think we're assuming is always 1)
     end
 
     # SIGNIFICANTLY trimmed down
