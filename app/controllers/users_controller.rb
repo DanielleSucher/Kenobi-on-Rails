@@ -31,8 +31,8 @@ class UsersController < ApplicationController
         else
             # train Kenobi when classifying new or out-of-date users
             @user.delay.train unless @user.training_status == "started"
-            flash[:training] = "Please be patient - Kenobi is busy analyzing your AskMeFi data to figure out 
-                                    what kinds of questions you're best at answering!"
+            flash[:training] = "Kenobi is busy analyzing your AskMeFi data to figure out what kinds of questions 
+                you're best at answering!"
             redirect_to root_path
         end
     end
@@ -52,5 +52,14 @@ class UsersController < ApplicationController
         else
             render :json => { 'status' => @user.training_status }
         end
+    end
+
+    def email
+        @user = User.where(:id => session[:user_id]).first
+        @user.update_attribute(:email, params[:email])
+        respond_to do |format|  
+            format.html { redirect_to root_path }  
+            format.js 
+        end  
     end
 end

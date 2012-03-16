@@ -6,12 +6,12 @@ function check_status() {
 		dataType: 'json',
 		success: function(data){
 			if(data.status == "done"){
-				$('.flash_training').html("Kenobi is finished learning all about you, and is now classifying your results. You'll be redirected soon!");
+				$('.flash_training h3').html("Kenobi is finished learning all about you, and is now classifying your results. You'll be redirected soon!");
 				setTimeout(check_status,2000);
 			} else if(data.status == "ready") {
 				window.location = "/results";
 			} else {
-				setTimeout(check_status,10000);
+				setTimeout(check_status,20000);
 			}
 		}
 	});

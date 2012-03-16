@@ -4,7 +4,7 @@ require 'naivebayes'
 
 class User < ActiveRecord::Base
 	attr_accessible :askme_id, :total_words, :total_docs, :should_words, :should_not_words, 
-					:should_docs, :should_not_docs, :train, :train_word, :training_status
+					:should_docs, :should_not_docs, :train, :train_word, :training_status, :email
 
 
     has_many :words, :dependent => :destroy
@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
         end
         self.save
         self.reload
+        UserMailer.ready_email(self).deliver if !self.email.nil?
         self.update_attribute(:training_status, "done")
     end
 

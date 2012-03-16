@@ -1,5 +1,9 @@
 <% flash.each do |key, value| %>
-	<div class="flash_<%= key %>"><h3><%= value %></h3><div id="spinner"></div></div>
+	<div class="flash_<%= key %>">
+		<h3><%= value %></h3>
+		<div class="email"></div>
+		<div id="spinner"></div>
+	</div>
 <% end %>
 <br />
 <div class="classify_form">
@@ -22,6 +26,14 @@
 </div>
 
 <div class="note">
-	<p>Note:  If you've never used Kenobi before, you may be waiting a while. Sorry about that! Hang out and watch the spinny doodad, and you'll be redirected to your results just as soon as Kenobi has had the chance to figure you out.</p>
+	<p>Note:  If you've never used Kenobi before, and especially if you've been active on AskMeFi for a long time, you may be waiting quite a while. Sorry about that! We can send you an email to alert you once Kenobi is ready for you, and/or you can just hang out and watch the spinny doodad and wait to be redirected to your results as soon as Kenobi is done figuring you out.</p>
 	<p>After that initial set-up, you can use Kenobi to classify new <%= link_to "AskMeFi", "http://ask.metafilter.com/" %> questions for you whenever you want, and it'll be much faster. Kenobi only goes through that long learning process the first time, or if it's been more than 6 months since the last time it updated its records on you. Phew!</p>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	if ($('.flash_training').length) {
+		$('.email').html("<%= escape_javascript(render('users/email_form')) %>");
+	}
+});
+</script>
