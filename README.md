@@ -9,6 +9,6 @@ And if you're interested in the history of Bayes' Theorem - http://lesswrong.com
 
 ***
 
-To get this working, you'll first have to edit lines 94-95 in app/helpers/askmeanswerscraper.rb to change "METAFILTER_USER_NAME" and "METAFILTER_USER_PASSWORD" to some actual metafilter username/password combo so that Mechanize will be able to log in and scrape user profile answers favcnt data.
+To get this working, you'll first have to edit lines 94-95 in app/helpers/askmeanswerscraper.rb to change "METAFILTER_USER_NAME" and "METAFILTER_USER_PASSWORD" to some actual metafilter username/password combo so that Mechanize will be able to log in and scrape user profile answers favcnt data. Also, change the email address and URL in the mailer, and set the environment variables for Dalli and thet mailer SMTP settings.
 
 Ruby 1.9.3, Rails 3.2, see Gemfile for dependencies. Don't forget to bundle install and rake db:migrate!

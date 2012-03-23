@@ -17,7 +17,7 @@ class AskMeAnswerScraper
         html = page.parser
         div = html.css('div.copy').first
         content = div.text.split(/$/)
-        if content[1].include?("favorites")
+        if content[1].include? "favorites"
             content = content[0].split("posted by")[0]
         else
             content[2] ? content = content[2].gsub(/\n|\r/,"") : content = "" 
@@ -83,7 +83,7 @@ class AskMeAnswerScraper
         @page = @agent.click(@page.link_with(:text => "Login"))
 
         # You have to log in before scraping in order to be able to see favcnt spans
-        login_form = @page.form_with( :action => 'logging-in.mefi')
+        login_form = @page.form_with :action => 'logging-in.mefi'
         @user_name = "METAFILTER_USER_NAME"
         @user_pass = "METAFILTER_USER_PASSWORD"
         login_form.user_name = @user_name

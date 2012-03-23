@@ -9,17 +9,16 @@ class UsersController < ApplicationController
     end
 
     def classify
-
         @user = User.where(:askme_id => params[:askme_id]).first || 
             User.create!(:askme_id => params[:askme_id])
         session[:askme_id] = params[:askme_id]
         session[:user_id] = @user.id
-        session[:pages] = params[:pages]
+        # session[:pages] = params[:pages] (if offering the option of choosing n pages instead of defaulting to 1)
         # delete old records so Kenobi will retrain as needed
-        @user.words.where(['updated_at < ?', 6.months.ago]).destroy_all 
-        if @user.words.first != nil
+        @user.update_attribute(:wordstems, nil) if @user.updated_at < 6.months.ago
+        if @user.wordstems
             # run the question scraper and classify the results
-            @user.classify(session[:pages])
+            @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
             if !@user.results || @user.results == []
                 flash[:error] = "Sorry, something went wrong! This probably means that you're just no good at 
                                     answering AskMeFi questions yet."
@@ -32,7 +31,8 @@ class UsersController < ApplicationController
             # train Kenobi when classifying new or out-of-date users
             @user.delay.train unless @user.training_status == "started"
             flash[:training] = "Kenobi is busy analyzing your AskMeFi data to figure out what kinds of questions 
-                you're best at answering!"
+                you're best at answering! This can take ages, so please feel free to wander off and just have Kenobi 
+                email you when ready."
             redirect_to root_path
         end
     end
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     def check_status
         @user = User.where(:id => session[:user_id]).first
         if @user.training_status == "done"
-            @user.classify(session[:pages])
+            @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
             if !@user.results || @user.results == []
                 flash[:error] = "Sorry, something went wrong! This probably means that you're just no good at 
                                     answering AskMeFi questions yet."
@@ -56,10 +56,19 @@ class UsersController < ApplicationController
 
     def email
         @user = User.where(:id => session[:user_id]).first
-        @user.update_attribute(:email, params[:email])
+        @user.update_attribute :email, params[:email]
         respond_to do |format|  
             format.html { redirect_to root_path }  
             format.js 
         end  
     end
 end
+
+
+# Add this to the home page form if you want to offer the option of how many pages to classify:
+
+#         <div class="field lower">
+#             How many pages of new AskMe questions should Kenobi analyze for you?
+#             <br />
+#             <span class="form_select"><%= select_tag :pages, "<option>1</option><option>2</option><option>3</option>".html_safe %></span>
+#         </div> 

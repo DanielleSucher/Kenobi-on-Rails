@@ -1,0 +1,9 @@
+<%= form_tag 'users/email', :method => :post, :class => "email_form", :remote => true do %>
+	<h4>Please submit your email address so Kenobi can email you once it's done analyzing all your past AskMeFi answers and is ready to classify new questions for you:</h4>
+	<div class="field lower">
+		<span class="form_select"><%= text_field_tag :email %></span>
+	</div>
+	<div class="actions">
+		<span class="form_submit"><%= submit_tag "Submit" %></span>
+	</div>
+<% end %>

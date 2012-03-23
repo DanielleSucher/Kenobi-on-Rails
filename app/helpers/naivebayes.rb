@@ -7,18 +7,53 @@ class NaiveBayes
     def initialize(categories,user)
         @user = user
         @categories = categories
+        @words = Hash.new # Hash of categories => hashes of word => count (in that category)
         @threshold = 3.5 # how much more likely x has to be than y to bother declaring it
+        @categories.each { |category| @words[category] = Hash.new }
+        @wordstems = Array.new
+        @word_stash = ""
     end
 
     # Train the classifier!
     def train(category,document)
         word_count(document).each do |word,count|
-            @user.train_word(category,word,count)
+            @user.total_words += count
+            @user.save
+            cat = category+"_words"
+            @user.update_attribute(cat.to_sym, @user[cat.to_sym] + count)
+            @words[category][word] ||= 0 # Stemming here would be redundant
+            @words[category][word] += count
         end
         cat = category+"_docs"
-        User.increment_counter(cat.to_sym, @user.id)
+        User.increment_counter cat.to_sym, @user.id
         @user.total_docs += 1
         @user.save
+    end
+
+    def compress_word_hash
+        @categories.each do |category| 
+            @words[category].each_key do |word|
+                @wordstems.push word unless @wordstems.include? word
+            end
+        end 
+        @wordstems.sort!
+        @wordstems.each do |word|
+            count1 = @words[@categories[0]][word] || 0
+            count2 = @words[@categories[1]][word] || 0
+            @word_stash << "#{word} #{count1} #{count2}\n"
+        end
+        @word_stash = Zlib::Deflate.deflate @word_stash
+        @user.update_attribute :wordstems, @word_stash
+    end
+
+    def decompress_word_hash
+        @word_stash = Zlib::Inflate.inflate @user.wordstems
+        @wordstems = @word_stash.split(/\n/)
+        @wordstems.each { |w| w = w.split }
+        @wordstems.each do |w|
+            @words[@categories[0]][w[0]] =  w[1]
+            @words[@categories[0]][w[0]] =  w[2]
+        end
     end
 
     # find the probability for each category and return a hash, category => probability thereof
@@ -49,12 +84,12 @@ class NaiveBayes
     end
 
     def word_count(document)
-        words = document.gsub(/[^\w\s]/,"").split 
+        words = document.gsub(/-/," ").gsub(/[^a-zA-Z\s]/,"").gsub(/\s+/," ").split 
         word_hash = Hash.new
         words.each do |word|
             word.downcase!
             key = word.stem
-            unless COMMON_WORDS.include?(word) # Remove common words
+            unless COMMON_WORDS.include? word # Remove common words
                 word_hash[key] ||= 0
                 word_hash[key] += 1 # Each word is a key, and maps to the count of how often it appears
             end
@@ -68,9 +103,7 @@ class NaiveBayes
         # Except we pretend every occured at least once per category, to avoid errors when encountering
         # words never encountered during training. (In latest draft, 0.0000000000000001 instead of 1)
         test_word = 0.0000000000000001
-        test_word = @user.words.find(:first, :conditions => { :wordstem => word })[category.to_sym].to_f if
-            @user.words.find(:first, :conditions => { :wordstem => word }) &&
-            @user.words.find(:first, :conditions => { :wordstem => word })[category.to_sym] != 0
+        test_word = @words[category][word].to_f unless !@words[category][word] || @words[category][word] == 0
         cat = category+"_words"
         return test_word/@user[cat.to_sym].to_f
     end
