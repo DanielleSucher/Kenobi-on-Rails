@@ -1,0 +1,13 @@
+<% flash.each do |key, value| %>
+	<div class="flash_<%= key %>"><h3><%= value %></h3></div>
+<% end %>
+
+<% if @user.results != [] || nil %>
+	<div class="results">
+		<ul>
+			<% @user.results.each do |result| %>
+				<li><%= link_to "#{result.content}", result.url %></li>
+			<% end %>
+		</ul>
+	</div>
+<% end %>

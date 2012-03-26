@@ -4,8 +4,9 @@ require 'naivebayes'
 
 class UsersController < ApplicationController
 
-    def new
-        redirect_to root_path
+    def show
+        @user = User.find(params[:id])
+        @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
     end
 
     def classify
