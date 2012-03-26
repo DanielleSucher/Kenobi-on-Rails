@@ -7,6 +7,14 @@ class UsersController < ApplicationController
     def show
         @user = User.find(params[:id])
         @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
+        if !@user.results || @user.results == []
+            flash[:error] = "Sorry, something went wrong! This probably means that you're just no good at 
+                                answering AskMeFi questions yet."
+            redirect_to results_path
+        else
+            flash[:success] = "Kenobi has picked out the AskMeFi questions that you can answer best!"
+            redirect_to results_path
+        end
     end
 
     def classify
