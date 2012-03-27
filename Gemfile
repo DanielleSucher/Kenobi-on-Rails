@@ -25,8 +25,8 @@ gem 'nokogiri'
 gem 'mechanize'
 
 gem 'delayed_job_active_record'
-# gem "workless", "~> 1.0.1"
-gem "workless", "~> 1.0.1", :git => "git@github.com:DanielleSucher/workless.git"
+gem "workless", "~> 1.0.1"
+# gem "workless", "~> 1.0.1", :git => "git@github.com:DanielleSucher/workless.git"
 gem 'dalli', '~> 1.1'
 
 group :production do

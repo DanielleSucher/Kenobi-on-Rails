@@ -3,9 +3,8 @@
 class AskMeAnswerScraper
     attr_accessor :askme_id, :should_answer_training, :should_not_answer_training
 
-    def initialize(askme_id)
-        @askme_id = askme_id
-        @url="http://www.metafilter.com/activity/#{@askme_id}/comments/ask/"
+    def initialize(user)
+        @user = user
         @agent = Mechanize.new
         @agent.ca_file = "./lib/assets/cacert.pem" 
         @should_answer_training = []
@@ -77,21 +76,42 @@ class AskMeAnswerScraper
         end
     end
 
-    def login_to_scrape_answers
-    # Use Mechanize to connect securely 
-        @page = @agent.get(@url)
-        @page = @agent.click(@page.link_with(:text => "Login"))
-
-        # You have to log in before scraping in order to be able to see favcnt spans
-        login_form = @page.form_with :action => 'logging-in.mefi'
+    def get_askme_id
+        page = @agent.get("https://login.metafilter.com/")
+        # You have to log in before scraping in order to be able to search usernames
+        login_form = page.form_with :action => 'logging-in.mefi'
         @user_name = "METAFILTER_USER_NAME"
         @user_pass = "METAFILTER_USER_PASSWORD"
+        login_form.user_name = @user_name
+        login_form.user_pass = @user_pass
+        page = @agent.submit(login_form, login_form.buttons.first)
+        page = @agent.click(page.link_with(:text => "Click here"))
+        page = @agent.click(page.link_with(:text => "Search"))
+        search_form = page.form_with :action => "/contribute/search.mefi"
+        search_form.q = @user.name
+        page = @agent.submit(search_form, search_form.buttons.first)
+        page = @agent.click(page.link_with(:text => /Users\s\(\d+\)/))
+        html = page.parser
+        askme_id = html.search('div.copy')[1].search('a')[0]['href'].gsub(/[^\d]+/,"")
+        @user.update_attribute :askme_id, askme_id
+        @askme_id = @user.askme_id
+    end
+
+    def login_to_scrape_answers
+    # Use Mechanize to connect securely 
+        @agent = Mechanize.new
+        @page = @agent.get(@url)
+        @page = @agent.click(@page.link_with(:text => "Login"))
+        # You have to log in before scraping in order to be able to see favcnt spans
+        login_form = @page.form_with :action => 'logging-in.mefi'
         login_form.user_name = @user_name
         login_form.user_pass = @user_pass
         @page = @agent.submit(login_form, login_form.buttons.first)
     end
 
     def scrape_logged_in
+        self.get_askme_id
+        @url="http://www.metafilter.com/activity/#{@askme_id}/comments/ask/"
         self.login_to_scrape_answers
         # Parse the first page of answers
         @page = @agent.click(@page.link_with(:text => "Click here"))

@@ -1,13 +1,3 @@
-GIT
-  remote: git@github.com:DanielleSucher/workless.git
-  revision: 44280f6d0251e16bda7cc778b84e3e96d6f2f80a
-  specs:
-    workless (1.0.1)
-      delayed_job (>= 2.0.7)
-      heroku
-      rails
-      rush
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -157,6 +147,11 @@ GEM
       unf_ext
     unf_ext (0.0.4)
     webrobots (0.0.13)
+    workless (1.0.1)
+      delayed_job (>= 2.0.7)
+      heroku
+      rails
+      rush
 
 PLATFORMS
   ruby
@@ -175,4 +170,4 @@ DEPENDENCIES
   stemmer
   thin
   uglifier (>= 1.0.3)
-  workless (~> 1.0.1)!
+  workless (~> 1.0.1)

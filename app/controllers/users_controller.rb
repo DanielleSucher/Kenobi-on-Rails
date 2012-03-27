@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 
     def show
         @user = User.find(params[:id])
+        session[:user_id] = @user.id
         @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
         if !@user.results || @user.results == []
             flash[:error] = "Sorry, something went wrong! This probably means that you're just no good at 
@@ -18,9 +19,8 @@ class UsersController < ApplicationController
     end
 
     def classify
-        @user = User.where(:askme_id => params[:askme_id]).first || 
-            User.create!(:askme_id => params[:askme_id])
-        session[:askme_id] = params[:askme_id]
+        @user = User.where(:name => params[:name].downcase).first || 
+            User.create!(:name => params[:name].downcase)
         session[:user_id] = @user.id
         # session[:pages] = params[:pages] (if offering the option of choosing n pages instead of defaulting to 1)
         # delete old records so Kenobi will retrain as needed

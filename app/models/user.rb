@@ -3,12 +3,12 @@ require 'askmequestionscraper'
 require 'naivebayes'
 
 class User < ActiveRecord::Base
-	attr_accessible :askme_id, :total_words, :total_docs, :should_words, :should_not_words, 
+	attr_accessible :askme_id, :name, :total_words, :total_docs, :should_words, :should_not_words, 
 					:should_docs, :should_not_docs, :train, :train_word, :training_status, :email, :wordstems
 
     has_many :results, :dependent => :destroy
 
-    validates_presence_of :askme_id
+    validates_presence_of :name
 
     def train
         self.update_attribute :training_status, "started"
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
         self.save
         self.reload
     	# run the answer scraper
-        scraper = AskMeAnswerScraper.new self.askme_id
+        scraper = AskMeAnswerScraper.new self
         scraper.scrape_logged_in
         # train Kenobi on the results
         scraper.should_answer_training.each do |question|
@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
         end
         classifier.compress_word_hash
         self.update_attribute :training_status, "done"
-        UserMailer.ready_email(self).deliver unless self.email.nil?
+        UserMailer.ready_email(self).deliver
     end
 
     def classify(pages)

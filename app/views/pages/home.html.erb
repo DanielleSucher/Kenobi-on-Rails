@@ -11,9 +11,9 @@
 	<%= form_tag 'users/classify', :method => 'post' do %>
 		<h3>Have Kenobi identify the best new <%= link_to "Ask MetaFilter", "http://ask.metafilter.com/" %> questions for you to answer:</h3>
 		<div class="field lower">
-			What is your MetaFilter user ID <strong>number</strong>?
+			What is your MetaFilter username?
 			<br />
-			<span class="form_input"><%= text_field_tag :askme_id %></span>
+			<span class="form_input"><%= text_field_tag :name %></span>
 		</div>
 		<div class="actions">
 			<span class="form_submit"><%= submit_tag "Submit" %></span>
