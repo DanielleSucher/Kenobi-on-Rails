@@ -1,5 +1,5 @@
 require 'askmeanswerscraper'
-require 'askmequestionscraper'
+require 'feedzirra'
 require 'naivebayes'
 
 class User < ActiveRecord::Base
@@ -26,37 +26,47 @@ class User < ActiveRecord::Base
         self.reload
     	# run the answer scraper
         scraper = AskMeAnswerScraper.new self
-        scraper.scrape_logged_in
-        # train Kenobi on the results
-        scraper.should_answer_training.each do |question|
-            classifier.train "should", question
+        scraper.get_askme_id
+        if self.askme_id == "kenobi" # denotes name not found
+            self.update_attribute :training_status, "name_not_found"
+            UserMailer.fail_email(self).deliver
+        else
+            scraper.scrape_logged_in
+            # train Kenobi on the results
+            scraper.should_answer_training.each do |question|
+                classifier.train "should", question
+            end
+            scraper.should_not_answer_training.each do |question|
+                classifier.train "should_not", question
+            end
+            classifier.compress_word_hash
+            self.update_attribute :training_status, "done"
+            UserMailer.ready_email(self).deliver
         end
-        scraper.should_not_answer_training.each do |question|
-            classifier.train "should_not", question
-        end
-        classifier.compress_word_hash
-        self.update_attribute :training_status, "done"
-        UserMailer.ready_email(self).deliver
     end
 
-    def classify(pages)
+    def classify
     	# delete the last batch of results this user had
         self.results.destroy_all
-        Rails.cache.fetch 'new_questions', :expires_in => 1.hour do
-        	# run the question scraper
-        	question_scraper = AskMeQuestionScraper.new
-    		question_scraper.scrape(pages) # specifies how many pages of questions should Kenobi scrape and analyze
-    		# classify the results
-    		question_scraper.new_questions
+        # fetch new questions from the AskMeFi RSS feed
+        feed = Feedzirra::Feed.fetch_and_parse "http://feeds.feedburner.com/AskMetafilter"
+        new_questions= []
+        feed.entries.each do |entry|
+            url = entry.url
+            content = entry.summary.gsub(/\<(br|div)\b[\w\W]+/,"")
+            new_questions << { :content => content, :url => url }
         end
-        new_questions = Rails.cache.read 'new_questions'
         # prep the classifier
         categories = ["should","should_not"]
         classifier = NaiveBayes.new categories,self
         classifier.decompress_word_hash
+        # classify each new question
         new_questions.each do |question|
-			self.results.create!( :url => "http://ask.metafilter.com#{question[:url]}", 
-				:content => question[:content] ) if classifier.classify(question[:content]) == "should"
-		end
+            # question[:score] = classifier.classify question[:content]
+            # puts question
+            if classifier.classify(question[:content]) == "should"
+                self.results.create!(:url => question[:url], :content => question[:content])
+            end
+        end
     end
 end

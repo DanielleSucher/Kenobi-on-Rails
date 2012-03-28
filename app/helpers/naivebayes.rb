@@ -8,7 +8,7 @@ class NaiveBayes
         @user = user
         @categories = categories
         @words = Hash.new # Hash of categories => hashes of word => count (in that category)
-        @threshold = 3.5 # how much more likely x has to be than y to bother declaring it
+        @threshold = 4.5 # how much more likely x has to be than y to bother declaring it
         @categories.each { |category| @words[category] = Hash.new }
         @wordstems = Array.new
         @word_stash = ""
@@ -72,6 +72,8 @@ class NaiveBayes
         best = sorted.pop
         second_best = sorted.pop
         second_best[1] == 0 || best[1]/second_best[1] > @threshold ? best[0] : "Unknown"
+        # odds = self.probabilities(document)
+        # odds["should_not"] == 0 && odds["should"] != 0 ? "should" : odds["should"]/odds["should_not"]
     end
 
     def relative_odds(document) #  a complete set of relative odds rather than a single absolute odd
@@ -132,5 +134,5 @@ class NaiveBayes
 
     # SIGNIFICANTLY trimmed down
     COMMON_WORDS = ['a','an','and','the','them','he','him','her','she','their','we',
-        'to','be','some','on','or','by','i','this','that','for','in','into','what']
+        'to','be','some','on','or','by','i','this','that','for','in','into','what', 'br']
 end

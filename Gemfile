@@ -23,6 +23,7 @@ gem 'thin'
 gem 'stemmer'
 gem 'nokogiri'
 gem 'mechanize'
+gem 'feedzirra'
 
 gem 'delayed_job_active_record'
 gem "workless", "~> 1.0.1"

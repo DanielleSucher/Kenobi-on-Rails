@@ -92,13 +92,17 @@ class AskMeAnswerScraper
         page = @agent.submit(search_form, search_form.buttons.first)
         page = @agent.click(page.link_with(:text => /Users\s\(\d+\)/))
         html = page.parser
-        askme_id = html.search('div.copy')[1].search('a')[0]['href'].gsub(/[^\d]+/,"")
+        if html.search('div.copy').length == 1
+            askme_id = "kenobi" # denotes the entered username not found
+        else
+            askme_id = html.search('div.copy')[1].search('a')[0]['href'].gsub(/[^\d]+/,"")
+        end
         @user.update_attribute :askme_id, askme_id
         @askme_id = @user.askme_id
     end
 
     def login_to_scrape_answers
-    # Use Mechanize to connect securely 
+        # Use Mechanize to connect securely 
         @agent = Mechanize.new
         @page = @agent.get(@url)
         @page = @agent.click(@page.link_with(:text => "Login"))
