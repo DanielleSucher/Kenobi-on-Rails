@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     def show
         @user = User.find(params[:id])
         session[:user_id] = @user.id
-        @user.classify(1) # session[:pages] if you want to offer a choice of # of pages to classify instead
+        @user.classify # session[:pages] if you want to offer a choice of # of pages to classify instead
         if !@user.results || @user.results == []
             flash[:error] = "Sorry, something went wrong! This probably means that you're just no good at 
                                 answering AskMeFi questions yet."
